@@ -1,0 +1,37 @@
+<launch>
+
+<!--param set-->
+    <param name="FKP" value="0.4" type="double"/><!--0.2-->
+    <param name="FKD" value="1" type="double"/><!--1-->
+    <param name="FKI" value="0" type="double"/>
+    <param name="RKP" value="1.2" type="double"/><!--0.8-->
+    <param name="RKD" value="2" type="double"/><!--8-->
+    <param name="RKI" value="0" type="double"/>
+    <param name="target_x" value="10" type="double"/>
+    <param name="target_y" value="2" type="double"/>
+    <param name="speed1" value="0.1" type="double"/>
+    <param name="speed2" value="0.5" type="double"/>
+    <param name="i_param" value="0.1" type="double"/>
+    <param name="acc_time" value="10" type="double"/>
+
+<!--    <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" output="screen">-->
+
+<!--         Starts up faster, but timestamps will be inaccurate.-->
+<!--        <param name="calibrate_time" type="bool" value="false"/>-->
+
+<!--        &lt;!&ndash; Set the port to connect to here &ndash;&gt;-->
+<!--        <param name="port" type="string" value="/dev/hokuyo"/>-->
+
+<!--        <param name="intensity" type="bool" value="false"/>-->
+<!--    </node>-->
+<!--    <node name="base_controller" pkg="base_controller" type="base_controller" output="screen"/>-->
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+    <node name="pid" pkg="target_controller" type="target_controller" output="screen">
+        <!--input axis -->
+
+    </node>>
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+
+    <!--  <node name="rviz" pkg="rviz" type="rviz" respawn="false" output="screen" args="/home/zxy/lidargmapping/src/hokuyo_node/hokuyo_test.vcg"/>-->
+
+</launch>

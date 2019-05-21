@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<launch>    
+  
+    <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" >
+
+    <!-- Starts up faster, but timestamps will be inaccurate. -->
+    <param name="calibrate_time" type="bool" value="false"/>
+
+    <!-- Set the port to connect to here -->
+    <param name="port" type="string" value="/dev/ttyACM0"/>
+    <param name="frame_id" type="string" value="laser"/>
+    <param name="intensity" type="bool" value="false"/>
+  </node>
+
+
+    <!--start gmapping node -->
+    <node pkg="slam_karto" type="slam_karto" name="slam_karto" output="screen">
+    <remap from="scan" to="scan"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="map_update_interval" value="25"/>
+    <param name="resolution" value="0.025"/>
+  </node>
+
+    <!--start serial-port and odometry node-->
+    <node name="base_controller" pkg="base_controller" type="base_controller"/>
+
+    <!-- static_transform_publisher x y z yaw pitch roll frame_id child_frame_id period_in_ms -->  
+  <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link" args="0 0 0 0 0 0 base_footprint base_link 50" />
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0.18 0 0 0 base_link laser 50" />
+
+
+</launch>

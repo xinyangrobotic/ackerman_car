@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<launch>    
+  
+    <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" >
+
+    <!-- Starts up faster, but timestamps will be inaccurate. -->
+    <param name="calibrate_time" type="bool" value="false"/>
+
+    <!-- Set the port to connect to here -->
+    <param name="port" type="string" value="/dev/ttyACM0"/>
+    <param name="frame_id" type="string" value="laser"/>
+    <param name="intensity" type="bool" value="false"/>
+  </node>
+
+
+    <!--start gmapping node -->
+	<arg name="scan_topic"  default="scan" />
+  	<arg name="base_frame"  default="base_footprint"/>
+  	<arg name="odom_frame"  default="odom"/>
+    <node pkg="gmapping" type="slam_gmapping" name="simple_gmapping" output="screen">
+        <param name="base_frame" value="$(arg base_frame)"/>
+    	<param name="odom_frame" value="$(arg odom_frame)"/>
+	<param name="map_update_interval" value="5.0"/>  
+        <param name="maxUrange" value="30.0"/>
+        <param name="maxRange" value="31.0"/>
+        <param name="sigma" value="0.05"/>  
+        <param name="kernelSize" value="1"/>  
+        <param name="lstep" value="0.05"/>  
+        <param name="astep" value="0.05"/>  
+        <param name="iterations" value="5"/>  
+        <param name="lsigma" value="0.075"/>  
+        <param name="ogain" value="3.0"/>  
+        <param name="lskip" value="0"/>  
+        <param name="minimumScore" value="50"/>  
+        <param name="srr" value="0.1"/>  
+        <param name="srt" value="0.2"/>  
+        <param name="str" value="0.1"/>  
+        <param name="stt" value="0.2"/>  
+        <param name="linearUpdate" value="1.0"/>  
+        <param name="angularUpdate" value="0.5"/>  
+        <param name="temporalUpdate" value="3.0"/>  
+        <param name="resampleThreshold" value="0.5"/>  
+        <param name="particles" value="30"/>
+        <param name="xmin" value="-5.0"/>  
+        <param name="ymin" value="-5.0"/>  
+        <param name="xmax" value="5.0"/>  
+        <param name="ymax" value="5.0"/>  
+        <param name="delta" value="0.05"/>  
+        <param name="llsamplerange" value="0.01"/>  
+        <param name="llsamplestep" value="0.01"/>  
+        <param name="lasamplerange" value="0.005"/>  
+        <param name="lasamplestep" value="0.005"/> 
+ 	<remap from="scan" to="$(arg scan_topic)"/>
+    </node>
+
+    <!--start serial-port and odometry node-->
+    <node name="base_controller" pkg="base_controller" type="base_controller"/>
+
+    <!-- static_transform_publisher x y z yaw pitch roll frame_id child_frame_id period_in_ms -->  
+  <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link" args="0 0 0 0 0 0 base_footprint base_link 50" />
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0.18 0 0 0 base_link laser 50" />
+
+
+</launch>

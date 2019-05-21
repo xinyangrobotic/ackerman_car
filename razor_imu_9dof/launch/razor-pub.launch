@@ -1,0 +1,10 @@
+<launch>
+  <arg name="razor_config_file" default="$(find razor_imu_9dof)/config/my_razor.yaml"/>
+  <node pkg="razor_imu_9dof" type="imu_node.py" name="imu_node" output="screen">
+    <rosparam file="$(arg razor_config_file)" command="load"/>
+  </node>
+
+  <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+  <node name="base_controller" pkg="base_controller" type="base_controller"/>
+  <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+</launch>

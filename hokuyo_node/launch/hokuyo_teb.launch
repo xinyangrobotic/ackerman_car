@@ -1,0 +1,107 @@
+<launch>
+
+    <param name="use_sim_time" value="false" />
+
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+
+    <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" >
+
+        <!-- Starts up faster, but timestamps will be inaccurate. -->
+        <param name="calibrate_time" type="bool" value="false"/>
+
+        <!-- Set the port to connect to here -->
+        <param name="port" type="string" value="/dev/hokuyo"/>
+        <param name="frame_id" type="string" value="laser"/>
+        <param name="intensity" type="bool" value="false"/>
+    </node>
+
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+
+    <!-- 启动地图服务器载入地图 -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find hokuyo_node)/map/20190415.yaml">
+
+<!--    <remap from="base_scan" to="scan"/>-->
+    </node>
+
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find hokuyo_node)/carlike/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find hokuyo_node)/carlike/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find hokuyo_node)/carlike/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find hokuyo_node)/carlike/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find hokuyo_node)/carlike/teb_local_planner_params.yaml" command="load" />
+<!--    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />-->
+        <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+        <param name="planner_frequency" value="1.0" />
+        <param name="planner_patience" value="5.0" />
+
+        <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+        <param name="controller_frequency" value="5.0" />
+        <param name="controller_patience" value="15.0" />
+
+        <param name="clearing_rotation_allowed" value="false" /> <!-- Our carlike robot is not able to rotate in place -->
+</node>
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+
+    <!-- 启动 AMCL 节点 -->
+    <node pkg="amcl" type="amcl" name="amcl" clear_params="true">
+        <param name="use_map_topic" value="false"/>
+        <!-- Publish scans from best pose at a max of 10 Hz -->
+
+        <param name="gui_publish_rate" value="10.0"/>
+        <param name="laser_max_beams" value="60"/>
+        <param name="laser_max_range" value="10"/>
+        <param name="min_particles" value="500"/>
+        <param name="max_particles" value="2000"/>
+<!--        <param name="initial_pose_x" value="0.0"/> //初始位姿均值（x），用于初始化高斯分布滤波器。（initial_pose_参数决定撒出去的初始位姿粒子集范围中心）-->
+<!--        <param name="initial_pose_y" value="0.0"/> //初始位姿均值（y），用于初始化高斯分布滤波器。（同上）-->
+<!--        <param name="initial_pose_a" value="0.0"/> //初始位姿均值（yaw），用于初始化高斯分布滤波器。（粒子朝向）-->
+        <param name="initial_cov_xx" value="1"/>
+        <param name="initial_cov_yy" value="1"/>
+        <param name="initial_cov_aa" value="1"/>
+        <param name="kld_err" value="0.05"/>
+        <param name="kld_z" value="0.99"/>
+        <param name="odom_alpha1" value="0.2"/>
+        <param name="odom_alpha2" value="0.2"/>
+        <!-- translation std dev, m -->
+        <param name="odom_alpha3" value="0.2"/>
+        <param name="odom_alpha4" value="0.2"/>
+        <param name="odom_model_type" value="diff"/>
+        <param name="odom_alpha5" value="0.1"/>
+        <param name="laser_z_hit" value="0.5"/>
+        <param name="laser_z_short" value="0.05"/>
+        <param name="laser_z_max" value="0.05"/>
+        <param name="laser_z_rand" value="0.5"/>
+        <param name="laser_sigma_hit" value="0.2"/>
+        <param name="laser_lambda_short" value="0.1"/>
+        <param name="laser_model_type" value="likelihood_field"/>
+        <!-- <param name="laser_model_type" value="beam"/> -->
+        <param name="laser_likelihood_max_dist" value="2.0"/>
+        <param name="update_min_d" value="0.25"/>
+        <param name="update_min_a" value="0.2"/>
+
+        <param name="odom_frame_id" value="odom"/>
+<!--        <param name="base_frame_id" value="base_link"/>  //用作机器人的基坐标系-->
+<!--        <param name="global_frame_id" value="map"/>  //由定位系统发布的坐标系名称-->
+
+        <param name="resample_interval" value="1"/>
+        <!-- Increase tolerance because the computer can get quite busy -->
+        <param name="transform_tolerance" value="1.0"/>
+        <param name="recovery_alpha_slow" value="0"/>
+        <param name="recovery_alpha_fast" value="0"/>/
+        <!-- scan topic -->
+        <remap from="scan" to="scan"/>
+    </node>
+
+
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+<!--    <node name="base_controller" pkg="base_controller" type="base_controller"/>-->
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+
+    <!-- tf　转换 -->
+    <!-- static_transform_publisher x y z yaw pitch roll frame_id child_frame_id period_in_ms -->
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link" args="0 0 0 0 0 0 base_footprint base_link 25" />
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0.5 0 0 0 base_link laser 25" />
+
+    <!-- ××××××××××××××××××××××××××××××××××××××××××××　华丽分割线　××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××　-->
+</launch>
