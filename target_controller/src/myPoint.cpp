@@ -1,11 +1,12 @@
 #include "myPoint.h"
 
-MyPoint::MyPoint(double xPos, double yPos, double alpha, ros::Time t)
+MyPoint::MyPoint(double xPos, double yPos, double alpha, int turn_around, ros::Time t)
 {
   x = xPos;
   y = yPos;
   angle = alpha;
   time = t;
+  turn = turn_around;
 }
 
 MyPoint::~MyPoint()

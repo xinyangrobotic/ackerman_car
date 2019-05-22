@@ -14,7 +14,7 @@ public:
    * alpha  Robot rotation.
    * t      Time of measurement
    */
-  MyPoint(double xPos, double yPos, double alpha, ros::Time t);
+  MyPoint(double xPos, double yPos, double alpha, int turn_around, ros::Time t);
 
   ~MyPoint();
 
@@ -31,6 +31,7 @@ public:
   double y;       // Position in y.
   ros::Time time; // Time, when the position was measured.
   double angle;   // Robot's angle.
+  int turn;     //该点是否为要转弯的点
 };
 
 #endif

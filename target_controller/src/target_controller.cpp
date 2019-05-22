@@ -59,6 +59,7 @@ int main(int argc, char **argv)
   while(!file.eof()){
       file >> temppoint.x_pos;
       file >> temppoint.y_pos;
+      file >> temppoint.turn;
       traj.push_back(temppoint);
   }
   traj.pop_back();

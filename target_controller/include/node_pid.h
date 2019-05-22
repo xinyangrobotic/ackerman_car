@@ -30,6 +30,7 @@ typedef struct pid
 typedef struct point{
     double x_pos;
     double y_pos;
+    int turn;
 } POINT;
 
 class NodePID
@@ -79,6 +80,7 @@ public:
   bool discloseEnough(MyPoint* actual);
   double line_b(MyPoint* actual);
   void line_param();
+  void line_turn();
 
 
 
@@ -115,8 +117,10 @@ public:
   double _targetdistance;
   PID _mypid;
   int stage;
+  int stage_turn;
   bool initial;
   double _a, _b, _c;
+  double _a_current, _b_current, _c_current, _a_forward, _b_forward, _c_forward;
   double angleMinLeft;       // Angle, at which was measured the shortest distance on the left.
   double distMinLeft;        // Minimum distance masured by sensor on the left.
   double angleMinRight;      // Angle, at which was measured the shortest distance on the right.
@@ -132,6 +136,8 @@ public:
   vector<POINT> _traj;
   int _reach;
   int _totalgoal;
+  double _turn_r;
+  double _turn_delta;
 };
 
 #endif

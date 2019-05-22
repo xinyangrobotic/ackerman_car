@@ -1,8 +1,8 @@
 <launch>
 
 <!--param set-->
-    <param name="FKP" value="0.4" type="double"/><!--0.2-->
-    <param name="FKD" value="1" type="double"/><!--1-->
+    <param name="FKP" value="0.2" type="double"/><!--0.2-->
+    <param name="FKD" value="0.3" type="double"/><!--1-->
     <param name="FKI" value="0" type="double"/>
     <param name="RKP" value="1.2" type="double"/><!--0.8-->
     <param name="RKD" value="2" type="double"/><!--8-->
