@@ -165,9 +165,9 @@ void NodePID::messageCallback(const nav_msgs::Odometry::ConstPtr& msg)
     _target->y = _traj[_reach].y_pos;
     _target->turn = _traj[_reach].turn;
 
-  MyPoint* actual = new MyPoint(msg->pose.pose.position.x, msg->pose.pose.position.y, 2.0*asin(msg->pose.pose.orientation.z), 0, msg->header.stamp);
+  MyPoint* actual = new MyPoint(msg->pose.pose.position.x, msg->pose.pose.position.y, tf::getYaw(msg->pose.pose.orientation), 0, msg->header.stamp);
 
-    if (discloseEnough(actual) == true)
+  if (discloseEnough(actual) == true)
     {
         if(_reach == _totalgoal - 1){
             ROS_INFO_STREAM("Goal ACHIEVED!");
@@ -294,7 +294,7 @@ void NodePID::messageCallback(const nav_msgs::Odometry::ConstPtr& msg)
               last->y = actual->y;
               last->time = actual->time;
               last->angle = actual->angle;
-              angle_error = fabs(2.0 * asin(msg->pose.pose.orientation.z) * 180 / PI - _targetangle * 180 / PI);
+              angle_error = fabs(tf::getYaw(msg->pose.pose.orientation) * 180 / PI - _targetangle * 180 / PI);
               ROS_INFO_STREAM("angle_error:" << angle_error);
 
           }
@@ -337,7 +337,7 @@ void NodePID::messageCallback(const nav_msgs::Odometry::ConstPtr& msg)
               last->y = actual->y;
               last->time = actual->time;
               last->angle = actual->angle;
-              angle_error = fabs(2.0 * asin(msg->pose.pose.orientation.z) * 180 / PI - _targetangle * 180 / PI);
+              angle_error = fabs(tf::getYaw(msg->pose.pose.orientation) * 180 / PI - _targetangle * 180 / PI);
               ROS_INFO_STREAM("angle_error:" << angle_error<<"speed:"<<speed);
 
           }
@@ -382,7 +382,7 @@ void NodePID::messageCallback(const nav_msgs::Odometry::ConstPtr& msg)
               last->y = actual->y;
               last->time = actual->time;
               last->angle = actual->angle;
-              angle_error = fabs(2.0 * asin(msg->pose.pose.orientation.z) * 180 / PI - _targetangle * 180 / PI);
+              angle_error = fabs(tf::getYaw(msg->pose.pose.orientation) * 180 / PI - _targetangle * 180 / PI);
               ROS_INFO_STREAM("angle_error:" << angle_error);
 
           }
@@ -497,7 +497,7 @@ void NodePID::messageCallback(const nav_msgs::Odometry::ConstPtr& msg)
               last->y = actual->y;
               last->time = actual->time;
               last->angle = actual->angle;
-              angle_error = fabs(2.0 * asin(msg->pose.pose.orientation.z) * 180 / PI - _targetangle * 180 / PI);
+              angle_error = fabs(tf::getYaw(msg->pose.pose.orientation) * 180 / PI - _targetangle * 180 / PI);
               ROS_INFO_STREAM("angle_error:" << angle_error);
           }
 

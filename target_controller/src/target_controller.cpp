@@ -10,7 +10,8 @@
 // #define PUBLISHER_TOPIC "/syros/base_cmd_vel"
 #define PUBLISHER_TOPIC "/cmd_vel"
 // #define SUBSCRIBER_TOPIC "/syros/global_odom"
-#define SUBSCRIBER_TOPIC "odom"
+#define SUBSCRIBER_TOPIC "odometry/filtered"
+//#define SUBSCRIBER_TOPIC "odom"
 #define PI 3.141592
 
 double F_KP, F_KD, F_KI, R_KP, R_KD, R_KI, target_x, target_y, speed1, speed2, i_param, acc_time;

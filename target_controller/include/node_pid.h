@@ -7,6 +7,7 @@
 #include "geometry_msgs/Twist.h"
 #include "std_msgs/Float32.h"
 #include "sensor_msgs/LaserScan.h"
+#include "tf/transform_broadcaster.h"
 #include <queue>
 #include <vector>
 #include <fstream>
