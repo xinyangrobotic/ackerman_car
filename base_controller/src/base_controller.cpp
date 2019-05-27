@@ -207,6 +207,7 @@ int main(int argc, char **argv)
     ros::Subscriber sub = n.subscribe("cmd_vel", 20, callback); //订阅/cmd_vel主题
     ros::Publisher odom_pub= n.advertise<nav_msgs::Odometry>("odom", 1); //定义要发布/odom主题
 
+
     static tf::TransformBroadcaster odom_broadcaster;//定义tf对象
     geometry_msgs::TransformStamped odom_trans;//创建一个tf发布需要使用的TransformStamped类型消息
     nav_msgs::Odometry odom;//定义里程计对象
@@ -258,6 +259,7 @@ int main(int argc, char **argv)
     {
 
         if(my_serial.available()) {
+
             string str_in = my_serial.read(my_serial.available());
             unsigned int str_length = str_in.size();
             static unsigned char chrTemp[2000];
@@ -352,7 +354,6 @@ int main(int argc, char **argv)
 
             }
             ROS_INFO_STREAM("LOST DATA: "<< i<<"  "<<"accept data:"<<j<<endl);
-            ROS_INFO_STREAM("receive_data[1] == 0x18:"<<(double)receive_data[1]<<"receive_data[28] == 0x0a:"<<(double)receive_data[28]);
 
 //            ROS_INFO_STREAM("calculate_a: "<<(float)cka<<"  "<<"calculate_b"<<(float)ckb<<"recieve_a: "<<(float)receive_data[24]<<"recieve_b:"<<(float)receive_data[25]);
 
